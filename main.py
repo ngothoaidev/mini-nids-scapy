@@ -6,11 +6,17 @@ from scapy.all import *
 import time
 from src.sniffer import process_packet_callback, sniff_packets  # Callback đã có parser
 from src.parser import parse_packet
+from src.stats import StatsTracker
+
+stats = StatsTracker()  # Initialize stats tracker
 
 def process_packet(packet):
     """Main pipeline: sniff → parse (Ngày 3)"""
     parsed = parse_packet(packet)
     if parsed:
+        stats.update(parsed)  # Update stats with parsed packet data
+        if time.time() % 10 < 0.1:  # Print dashboard every 10 seconds
+            stats.print_dashboard()
         process_packet_callback(packet)  # Print parsed
     return packet
 
