@@ -21,5 +21,17 @@ pip install -r requirements.txt
 sudo python nids.py  # iface='lo' default
 ```
 
+## Attack Demo (2 terminals)
+
+1) Start NIDS dashboard/sniffer:
+
+sudo python3 main.py --iface lo --bpf "tcp or udp or icmp"
+
+2) In another terminal, run attacks:
+
+python3 demo/attacks.py --attack all --target 127.0.0.1
+
+You should see alerts for port scan, SYN flood, and blacklisted source traffic.
+
 ## Tech: 
 Python, Scapy
