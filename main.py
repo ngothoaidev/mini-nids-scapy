@@ -1,21 +1,24 @@
-#!/usr/bin/env python3
-"""
-Mini NIDS v0.2 - Day 3 Pipeline (Sniff → Parse)
-"""
 from scapy.all import *
 import time
 from src.sniffer import process_packet_callback, sniff_packets  # Callback đã có parser
 from src.parser import parse_packet
 from src.stats import StatsTracker
+from src.detection import DetectionEngine
 
 stats = StatsTracker()  # Initialize stats tracker
+detection = DetectionEngine()
 
 def process_packet(packet):
     """Main pipeline: sniff → parse (Ngày 3)"""
     parsed = parse_packet(packet)
     if parsed:
         stats.update(parsed)  # Update stats with parsed packet data
-        if time.time() % 10 < 0.1:  # Print dashboard every 10 seconds
+
+        alert = detection.check(parsed)
+        if alert:
+            print(alert)  # Console alert
+            stats.alerts.append(alert)  # Dashboard
+        if time.time() % 5 < 0.1:  # Print dashboard every 5 seconds
             stats.print_dashboard()
         process_packet_callback(packet)  # Print parsed
     return packet

@@ -7,7 +7,7 @@ def process_packet_callback(packet):
     parsed = parse_packet(packet)
     if parsed:
         flags_str = f"flags={parsed['tcp_flags']}" if parsed['tcp_flags'] else ""
-        print(f"[PARSED] {parsed['proto']} {parsed['src_ip']}:{parsed['src_port'] or '?'} → {parsed['dst_ip']}:{parsed['dst_port'] or '?'} {flags_str}")
+        # print(f"[PARSED] {parsed['proto']} {parsed['src_ip']}:{parsed['src_port'] or '?'} → {parsed['dst_ip']}:{parsed['dst_port'] or '?'} {flags_str}")
     return packet
 
 def sniff_packets(iface="lo", timeout=None, count=0, prn=process_packet_callback, filter="ip"):
