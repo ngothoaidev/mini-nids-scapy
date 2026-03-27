@@ -10,6 +10,9 @@ class StatsTracker:
         self.console = Console()
         self.alerts = []
         self.start_time = time.time()
+
+    def get_uptime(self):
+        return time.time() - self.start_time
     
     def update(self, parsed):
         # Update protocol stats
@@ -24,7 +27,7 @@ class StatsTracker:
         # Print protocol stats
         total = sum(self.proto_stats.values()) # Get total packets
 
-        duration = time.time() - self.start_time
+        duration = self.get_uptime()
 
         table = Table(title=f"Mini NIDS Dashboard (Uptime: {duration:.1f}s, Total Packets: {total})")
         table.add_column("Protocol", style="cyan")

@@ -8,15 +8,14 @@ def process_packet_callback(packet):
     if parsed:
         flags_str = f"flags={parsed['tcp_flags']}" if parsed['tcp_flags'] else ""
         # print(f"[PARSED] {parsed['proto']} {parsed['src_ip']}:{parsed['src_port'] or '?'} → {parsed['dst_ip']}:{parsed['dst_port'] or '?'} {flags_str}")
-    return packet
+    return None
 
 def sniff_packets(iface="lo", timeout=None, count=0, prn=process_packet_callback, filter="ip"):
     # Sniff packets on the specified interface
-    print(f"Sniffing on interface: {iface} with filter: '{filter}'")
     try:
         sniff(iface=iface, timeout=timeout, count=count, prn=prn, filter=filter)
     except KeyboardInterrupt:
-        print("\nStopped sniffing")
+        pass
     
 if __name__ == "__main__":
     sniff_packets(iface="lo", count=100, filter="tcp or udp or icmp") 

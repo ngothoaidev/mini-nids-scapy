@@ -23,7 +23,6 @@ class DetectionEngine:
         self.port_scans[src_ip].append((time.time(), dst_port))
         unique_ports = len(set(p[1] for p in self.port_scans[src_ip] if time.time() - p[0] < self.window)) # Count unique ports in the last 60s
         
-        # Alert if more than 10 unique ports are targeted in the last 60s
         if unique_ports > 30:  # Threshold for port scan alert
             alert = f"[ALERT] Port scan from {src_ip}: {unique_ports} ports/60s"
             return alert
@@ -35,6 +34,7 @@ class DetectionEngine:
         src_ip = parsed['src_ip']
         now = time.time()
         self.syn_floods[src_ip] = self.syn_floods[src_ip] + 1 if now - self.last_syn[src_ip] < 30 else 1
+        self.last_syn[src_ip] = now
         
         # Alert if more than 50 SYN packets from the same IP in 30s
         if self.syn_floods[src_ip] > 50:  # KB 5.2
@@ -72,7 +72,7 @@ class DetectionEngine:
             json.dump(log_entry, f)
             f.write("\n")
         
-        print(f"[LOGGED] {log_entry['alert_type']} → data/alerts.json")
+        # print(f"[LOGGED] {log_entry['alert_type']} → data/alerts.json")
 
     
     def check(self, parsed):

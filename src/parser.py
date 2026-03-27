@@ -1,9 +1,8 @@
 from scapy.layers.inet import IP, TCP, UDP, ICMP
-from scapy.layers.l2 import Ether
 
 def parse_packet(packet):
     # Extract metadata: src_ip, dst_ip, proto, ports, flag
-    if not (packet.haslayer(IP) and packet.haslayer(Ether)):
+    if not packet.haslayer(IP):
         return None
     parsed = {
         'src_ip': packet[IP].src,
