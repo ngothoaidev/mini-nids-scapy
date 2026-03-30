@@ -7,10 +7,11 @@ def parse_packet(packet):
     parsed = {
         'src_ip': packet[IP].src,
         'dst_ip': packet[IP].dst,
-        'proto': 'TCP' if TCP in packet else 'UDP' if UDP in packet else 'ICMP',
+        'proto': 'TCP' if TCP in packet else 'UDP' if UDP in packet else 'ICMP' if ICMP in packet else 'OTHER',
         'src_port': packet[TCP].sport if TCP in packet else (packet[UDP].sport if UDP in packet else None),
         'dst_port': packet[TCP].dport if TCP in packet else (packet[UDP].dport if UDP in packet else None),
         'tcp_flags': packet[TCP].flags if TCP in packet else None,
-        'timestamp': packet.time
+        'timestamp': float(packet.time),
+        'packet_len': len(packet),
     }
     return parsed
